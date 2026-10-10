@@ -54,3 +54,9 @@ cache/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Kaggle temp logs & testing artifacts
+kaggle_logs/
+kaggle_output*/
+test_pull/
+*.log

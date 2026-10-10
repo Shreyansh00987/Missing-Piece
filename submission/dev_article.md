@@ -146,8 +146,8 @@ Across all 60 problem pairs, there was not a single instance where the model cor
 
 You can inspect, fork, and reproduce the entire benchmark on Kaggle:
 
-👉 **Kaggle Benchmark Notebook:** [MISSING PIECE: The Epistemic Caution AI Benchmark](https://www.kaggle.com/code/shreashchavhan/missing-piece-ai-benchmark) *(Local artifact: `notebooks/missing_piece_benchmark.ipynb`)*  
-👉 **Open GitHub Repository:** `d:/Project/Missing Piece`
+👉 **Kaggle Benchmark Notebook:** [MISSING PIECE: The Epistemic Caution AI Benchmark](https://www.kaggle.com/code/shreyanshagrahari14/missing-piece-ai-benchmark) *(Live Kaggle Kernel: `shreyanshagrahari14/missing-piece-ai-benchmark`)*  
+👉 **Local Notebook Artifact:** [`notebooks/missing_piece_benchmark.ipynb`](notebooks/missing_piece_benchmark.ipynb)
 
 ### Reproducing the Results in 60 Seconds
 The Kaggle notebook is completely self-contained. It includes:

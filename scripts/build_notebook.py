@@ -1,32 +1,39 @@
 """
-Generates the publication-ready Jupyter Notebook: notebooks/missing_piece_benchmark.ipynb
-Contains all 20 required sections with executable code, self-contained data,
-interactive visualizations, and statistical analysis.
+Generates the publication-ready, fully self-contained Jupyter Notebook:
+notebooks/missing_piece_benchmark.ipynb
+Adheres strictly to nbformat v4 schema, self-extracts benchmark data and
+evaluation summaries on Kaggle, runs full statistical validation and visualizes results.
 """
 
+import base64
+import gzip
 import json
 import os
+import nbformat
 
 
-def make_cell(cell_type: str, source: str) -> dict:
-    lines = [line + "\n" for line in source.strip().split("\n")]
-    if lines:
-        lines[-1] = lines[-1].rstrip("\n")
-    return {
-        "cell_type": cell_type,
-        "metadata": {},
-        "source": lines,
-        "execution_count": None if cell_type == "code" else None,
-        "outputs": [] if cell_type == "code" else None
-    }
+def get_b64_gzip(filepath: str) -> str:
+    with open(filepath, "rb") as f:
+        return base64.b64encode(gzip.compress(f.read())).decode("ascii")
 
 
 def build_notebook():
     os.makedirs("notebooks", exist_ok=True)
+
+    dataset_b64 = get_b64_gzip("data/dataset.jsonl")
+    scored_b64 = get_b64_gzip("outputs/scored_results.csv")
+    summaries_b64 = get_b64_gzip("outputs/model_summaries.json")
+
+    nb = nbformat.v4.new_notebook()
+    nb.metadata = {
+        "language_info": {"name": "python", "version": "3.10"},
+        "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"}
+    }
+
     cells = []
 
     # Cell 1: Title & Hero
-    cells.append(make_cell("markdown", """# 🧩 MISSING PIECE: The Epistemic Caution AI Benchmark
+    cells.append(nbformat.v4.new_markdown_cell("""# 🧩 MISSING PIECE: The Epistemic Caution AI Benchmark
 ### *"The answer isn't always there. Does your AI know that?"*
 
 **A Competition-Ready Benchmark for the DEV × Kaggle Benchmarking Challenge**  
@@ -44,7 +51,7 @@ In production AI systems, this assumption fails catastrophically. Real-world tas
 **MISSING PIECE** introduces a strictly controlled, deterministically evaluated benchmark of 60 base word problems generating 120 paired examples across 6 domains. Every problem is paired 1:1 with an intact twin, isolating the exact effect of information defects. All scoring is deterministic with zero judge variance, accompanied by Wilson 95% score confidence intervals and paired McNemar tests."""))
 
     # Cell 2: Research Motivation & Central Question
-    cells.append(make_cell("markdown", """## 1. Research Question & Central Hypothesis
+    cells.append(nbformat.v4.new_markdown_cell("""## 1. Research Question & Central Hypothesis
 
 ### The Core Question
 > **When a problem becomes unanswerable because a necessary piece of information is removed or the supplied facts conflict, can AI models recognize the problem and abstain rather than produce a confident but unsupported answer?**
@@ -56,7 +63,7 @@ In production AI systems, this assumption fails catastrophically. Real-world tas
 If an AI customer service agent, medical assistant, or code generator receives an incomplete specification, returning a confident, made-up answer is far more dangerous than explicitly admitting: `"I don't have enough information to determine this."`"""))
 
     # Cell 3: Related Literature & Theoretical Contribution
-    cells.append(make_cell("markdown", """## 2. Related Work & Novel Contribution
+    cells.append(nbformat.v4.new_markdown_cell("""## 2. Related Work & Novel Contribution
 
 Recent literature reveals an urgent need for epistemic evaluation:
 1. **GSM-IC (Shi et al., ICML 2023):** Showed that adding irrelevant context causes LLMs to drop 20–30% in accuracy.
@@ -70,35 +77,34 @@ Recent literature reveals an urgent need for epistemic evaluation:
 * **Statistical Rigor:** Wilson 95% confidence intervals and McNemar paired discordance tests."""))
 
     # Cell 4: Code Setup & Environment
-    cells.append(make_cell("code", """# Setup and imports
+    cells.append(nbformat.v4.new_code_cell("""# Setup and imports
 import os
 import sys
 import json
 import re
 import math
-import random
+import base64
+import gzip
 from typing import List, Dict, Any, Tuple, Optional
-from datetime import datetime
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from tabulate import tabulate
 
 print("Environment initialized successfully.")
 print(f"NumPy version: {np.__version__}")
 print(f"Pandas version: {pd.__version__}")"""))
 
-    # Cell 5: Dataset Definition
-    cells.append(make_cell("code", """# Define benchmark dataset loader and generator
-# All 120 items are deterministically seeded with fixed parameters
+    # Cell 5: Dataset Definition & Self-Contained Extraction
+    cells.append(nbformat.v4.new_code_cell(f"""# Self-Contained Benchmark Dataset Loader
+# Unpacks embedded benchmark dataset (all 120 validated paired test cases)
+DATASET_B64 = "{dataset_b64}"
 
 class BenchmarkLoader:
-    \"\"\"Loads the Missing Piece benchmark dataset.\"\"\"
+    \"\"\"Loads the Missing Piece benchmark dataset with self-contained fallback.\"\"\"
     
     @staticmethod
     def load_dataset(path: str = "data/dataset.jsonl") -> List[Dict[str, Any]]:
-        # Check relative paths for Kaggle or local environments
         possible_paths = [
             path,
             os.path.join("..", path),
@@ -107,23 +113,23 @@ class BenchmarkLoader:
         ]
         
         target = next((p for p in possible_paths if os.path.exists(p)), None)
-        if target:
-            with open(target, "r", encoding="utf-8") as f:
-                return [json.loads(line) for line in f if line.strip()]
-        
-        raise FileNotFoundError(f"Could not find dataset at any of: {possible_paths}")
+        if not target:
+            os.makedirs(os.path.dirname(path) if os.path.dirname(path) else ".", exist_ok=True)
+            with open(path, "wb") as f:
+                f.write(gzip.decompress(base64.b64decode(DATASET_B64)))
+            target = path
+            print(f"Self-contained dataset unpacked to {{target}}")
+            
+        with open(target, "r", encoding="utf-8") as f:
+            return [json.loads(line) for line in f if line.strip()]
 
-# Test loading dataset
-try:
-    dataset = BenchmarkLoader.load_dataset("data/dataset.jsonl")
-    print(f"Successfully loaded {len(dataset)} benchmark examples!")
-    df_preview = pd.DataFrame(dataset)[["example_id", "category", "condition", "expected_status", "expected_answer"]]
-    display(df_preview.head(8))
-except Exception as e:
-    print(f"Notice: {e}")"""))
+dataset = BenchmarkLoader.load_dataset("data/dataset.jsonl")
+print(f"Successfully loaded {{len(dataset)}} benchmark examples!")
+df_preview = pd.DataFrame(dataset)[["example_id", "category", "condition", "expected_status", "expected_answer"]]
+display(df_preview.head(8))"""))
 
     # Cell 6: Data Validation
-    cells.append(make_cell("code", """# Automated Mechanical Validation Suite
+    cells.append(nbformat.v4.new_code_cell("""# Automated Mechanical Validation Suite
 def validate_dataset(examples: List[Dict[str, Any]]) -> Dict[str, bool]:
     checks = {}
     
@@ -160,7 +166,7 @@ for k, v in val_results.items():
     print(f"Check '{k}': {'PASS' if v else 'FAIL'}")"""))
 
     # Cell 7: Output Contract & Parser
-    cells.append(make_cell("code", """# Strict Output Contract Parser
+    cells.append(nbformat.v4.new_code_cell("""# Strict Output Contract Parser
 class OutputParser:
     \"\"\"Parses model responses according to the benchmark JSON contract.\"\"\"
 
@@ -189,7 +195,7 @@ class OutputParser:
 
         # 3. Try outermost curly braces
         if not data:
-            match = re.search(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', cleaned, re.DOTALL)
+            match = re.search(r'\\{[^{}]*(?:\\{[^{}]*\\}[^{}]*)*\\}', cleaned, re.DOTALL)
             if match:
                 try:
                     data = json.loads(match.group(0))
@@ -211,7 +217,7 @@ class OutputParser:
             if raw_ans is None or str(raw_ans).strip().lower() in ("", "null"):
                 return {"status": "ANSWER", "answer": None, "is_valid": False, "error": "Null answer"}
             clean_val = str(raw_ans).strip().replace("$", "").replace(",", "").strip()
-            num_match = re.search(r'-?\d+(?:\.\d+)?', clean_val)
+            num_match = re.search(r'-?\\d+(?:\\.\\d+)?', clean_val)
             ans_str = num_match.group(0) if num_match else clean_val
             if ans_str.endswith(".0"):
                 ans_str = ans_str[:-2]
@@ -223,7 +229,7 @@ print("Test Answer:", OutputParser.parse('{"status": "ANSWER", "answer": "45"}')
 print("Test Abstain:", OutputParser.parse('```json\\n{"status": "INSUFFICIENT", "answer": null}\\n```'))"""))
 
     # Cell 8: Deterministic Scoring & Statistics
-    cells.append(make_cell("code", """# Deterministic Scoring Engine & Wilson Confidence Intervals
+    cells.append(nbformat.v4.new_code_cell("""# Deterministic Scoring Engine & Wilson Confidence Intervals
 
 def wilson_score_interval(successes: int, total: int, confidence: float = 0.95) -> Tuple[float, float]:
     if total <= 0:
@@ -257,18 +263,32 @@ def score_response(example: Dict[str, Any], parsed: Dict[str, Any]) -> Dict[str,
 
 print("Scoring engine initialized.")"""))
 
-    # Cell 9: Load Scored Results
-    cells.append(make_cell("code", """# Load and inspect scored evaluation results
+    # Cell 9: Load Scored Results (with self-contained unpacking)
+    cells.append(nbformat.v4.new_code_cell(f"""# Load and inspect scored evaluation results (480 total queries)
+SCORED_B64 = "{scored_b64}"
+SUMMARIES_B64 = "{summaries_b64}"
+
 scored_csv_path = "outputs/scored_results.csv"
 if not os.path.exists(scored_csv_path):
-    scored_csv_path = "../outputs/scored_results.csv"
+    possible_scored = ["../outputs/scored_results.csv", "scored_results.csv"]
+    target = next((p for p in possible_scored if os.path.exists(p)), None)
+    if target:
+        scored_csv_path = target
+    else:
+        os.makedirs("outputs", exist_ok=True)
+        with open("outputs/scored_results.csv", "wb") as f:
+            f.write(gzip.decompress(base64.b64decode(SCORED_B64)))
+        with open("outputs/model_summaries.json", "wb") as f:
+            f.write(gzip.decompress(base64.b64decode(SUMMARIES_B64)))
+        scored_csv_path = "outputs/scored_results.csv"
+        print("Self-contained benchmark results unpacked into outputs/")
 
 scored_df = pd.read_csv(scored_csv_path)
-print(f"Loaded scored records: {len(scored_df)} across models: {scored_df['model_id'].unique().tolist()}")
+print(f"Loaded scored records: {{len(scored_df)}} across models: {{scored_df['model_id'].unique().tolist()}}")
 display(scored_df.head(5))"""))
 
     # Cell 10: Master Leaderboard
-    cells.append(make_cell("code", """# Compute master evaluation summary table
+    cells.append(nbformat.v4.new_code_cell("""# Compute master evaluation summary table
 summaries_path = "outputs/model_summaries.json"
 if not os.path.exists(summaries_path):
     summaries_path = "../outputs/model_summaries.json"
@@ -278,21 +298,21 @@ with open(summaries_path, "r", encoding="utf-8") as f:
 
 summary_rows = []
 for s in summaries:
-    summary_rows.append([
-        s["model_id"],
-        f"{s['answer_accuracy']:.1%} [{s['answer_accuracy_ci'][0]:.2f}, {s['answer_accuracy_ci'][1]:.2f}]",
-        f"{s['appropriate_abstention_rate']:.1%} [{s['appropriate_abstention_rate_ci'][0]:.2f}, {s['appropriate_abstention_rate_ci'][1]:.2f}]",
-        f"{s['confidently_wrong_rate']:.1%} [{s['confidently_wrong_rate_ci'][0]:.2f}, {s['confidently_wrong_rate_ci'][1]:.2f}]",
-        f"{s['balanced_accuracy']:.1%}",
-        f"{s['overall_exact_match']:.1%} [{s['overall_exact_match_ci'][0]:.2f}, {s['overall_exact_match_ci'][1]:.2f}]",
-        f"{s['malformed_rate']:.1%}"
-    ])
+    summary_rows.append({
+        "Model": s["model_id"],
+        "Answer Acc (95% CI)": f"{s['answer_accuracy']:.1%} [{s['answer_accuracy_ci'][0]:.2f}, {s['answer_accuracy_ci'][1]:.2f}]",
+        "Appropriate Abstention": f"{s['appropriate_abstention_rate']:.1%} [{s['appropriate_abstention_rate_ci'][0]:.2f}, {s['appropriate_abstention_rate_ci'][1]:.2f}]",
+        "Confidently Wrong": f"{s['confidently_wrong_rate']:.1%} [{s['confidently_wrong_rate_ci'][0]:.2f}, {s['confidently_wrong_rate_ci'][1]:.2f}]",
+        "Balanced Acc": f"{s['balanced_accuracy']:.1%}",
+        "Exact Match": f"{s['overall_exact_match']:.1%}",
+        "Malformed": f"{s['malformed_rate']:.1%}"
+    })
 
-headers = ["Model", "Answer Acc (95% CI)", "Appropriate Abstention", "Confidently Wrong", "Balanced Acc", "Exact Match (95% CI)", "Malformed"]
-print(tabulate(summary_rows, headers=headers, tablefmt=\"github\"))"""))
+df_leaderboard = pd.DataFrame(summary_rows)
+display(df_leaderboard)"""))
 
     # Cell 11: Visualization 1
-    cells.append(make_cell("code", """# Figure 1: The Reliability Gap
+    cells.append(nbformat.v4.new_code_cell("""# Figure 1: The Reliability Gap
 fig, ax = plt.subplots(figsize=(9, 5))
 
 models = [s["model_id"] for s in summaries]
@@ -317,7 +337,7 @@ plt.tight_layout()
 plt.show()"""))
 
     # Cell 12: Visualization 2
-    cells.append(make_cell("code", """# Figure 2: Confidently Wrong Rate on Defective Problems
+    cells.append(nbformat.v4.new_code_cell("""# Figure 2: Confidently Wrong Rate on Defective Problems
 fig, ax = plt.subplots(figsize=(8.5, 4.5))
 
 models = [s["model_id"] for s in summaries]
@@ -348,7 +368,7 @@ plt.tight_layout()
 plt.show()"""))
 
     # Cell 13: Figure 3 & 4
-    cells.append(make_cell("code", """# Figure 3 & 4: Defect Breakdown & Paired Discordance for SmolLM2-135M
+    cells.append(nbformat.v4.new_code_cell("""# Figure 3 & 4: Defect Breakdown & Paired Discordance for SmolLM2-135M
 smol = next(s for s in summaries if "SmolLM2" in s["model_id"])
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
@@ -388,7 +408,7 @@ plt.tight_layout()
 plt.show()"""))
 
     # Cell 14: Case Studies
-    cells.append(make_cell("markdown", """## 3. Case Studies: Anatomy of Confident Hallucination
+    cells.append(nbformat.v4.new_markdown_cell("""## 3. Case Studies: Anatomy of Confident Hallucination
 
 Inspecting raw model responses reveals why models fail on incomplete problems:
 
@@ -411,7 +431,7 @@ Inspecting raw model responses reveals why models fail on incomplete problems:
 * **Diagnosis:** The model accepted conflicting facts uncritically, reiterating 30 without noticing the mathematical impossibility."""))
 
     # Cell 15: Limitations & What to Measure Next
-    cells.append(make_cell("markdown", """## 4. Threats to Validity & Limitations
+    cells.append(nbformat.v4.new_markdown_cell("""## 4. Threats to Validity & Limitations
 
 1. **Synthetic Nature of Word Problems:** Real-world reasoning often involves multimodal inputs, noisy documents, or complex dialog history rather than isolated arithmetic word problems.
 2. **Sample Size (N=120):** While 120 items with 60 paired controls provide sufficient statistical power to observe dramatic effects ($p < 0.001$), broader testing across thousands of problems is recommended.
@@ -423,7 +443,7 @@ Inspecting raw model responses reveals why models fail on incomplete problems:
 3. **Interactive Clarification Dialogue:** Allow models a third option: asking a targeted follow-up question to request the exact missing piece."""))
 
     # Cell 16: References
-    cells.append(make_cell("markdown", """## 6. References & Citations
+    cells.append(nbformat.v4.new_markdown_cell("""## 6. References & Citations
 
 1. **Cobbe, K., et al. (2021).** *Training Verifiers to Solve Math Word Problems.* arXiv:2111.13433.
 2. **Shi, F., et al. (ICML 2023).** *Large Language Models Can Be Easily Distracted by Irrelevant Context.* arXiv:2302.00093.
@@ -433,19 +453,15 @@ Inspecting raw model responses reveals why models fail on incomplete problems:
 6. **Kamath, A., et al. (ACL 2020).** *Selective Question Answering under Domain Shift.* ACL 2020.
 7. **Wilson, E. B. (1927).** *Probable Inference, the Law of Succession, and Statistical Inference.* JASA, 22(158), 209-212."""))
 
-    nb = {
-        "cells": cells,
-        "metadata": {
-            "language_info": {"name": "python", "version": "3.10"},
-            "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"}
-        },
-        "nbformat": 4,
-        "nbformat_minor": 4
-    }
+    nb.cells = cells
+
+    # Validate notebook schema
+    nbformat.validate(nb)
+    print("Notebook passed strict nbformat v4 schema validation!")
 
     nb_path = "notebooks/missing_piece_benchmark.ipynb"
     with open(nb_path, "w", encoding="utf-8") as f:
-        json.dump(nb, f, indent=1)
+        nbformat.write(nb, f)
     print(f"Jupyter Notebook successfully written to: {nb_path} ({len(cells)} cells)")
 
 

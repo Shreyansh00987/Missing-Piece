@@ -209,7 +209,8 @@ python scripts/run_full_benchmark.py
 ---
 
 ## 🏆 Kaggle & DEV Submission
-
+ 
+* **Live Kaggle Benchmark:** [shreyanshagrahari14/missing-piece-ai-benchmark](https://www.kaggle.com/code/shreyanshagrahari14/missing-piece-ai-benchmark)
 * **Accompanying DEV Article:** [`submission/dev_article.md`](submission/dev_article.md)
 * **Kaggle Notebook Deliverable:** [`notebooks/missing_piece_benchmark.ipynb`](notebooks/missing_piece_benchmark.ipynb)
 * **Kaggle Publication Guide:** [`submission/kaggle_publication_checklist.md`](submission/kaggle_publication_checklist.md)

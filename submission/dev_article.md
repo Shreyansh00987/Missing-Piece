@@ -2,7 +2,7 @@
 title: The Missing Piece: Why AI Models Hallucinate Answers When They Should Abstain
 published: false
 tags: devchallenge, kagglechallenge, ai, machinelearning
-cover_image: https://raw.githubusercontent.com/missing-piece/benchmark/main/assets/cover/missing_piece_cover.jpg
+cover_image: https://raw.githubusercontent.com/Shreyansh00987/Missing-Piece/main/assets/cover/missing_piece_cover.jpg
 ---
 
 *This is a submission for the [Kaggle Benchmarking Challenge](https://dev.to/challenges/kaggle-2026-09-23)*
@@ -114,14 +114,26 @@ Across 480 total inference queries, the empirical results yielded striking insig
 
 *(Wilson 95% score confidence intervals shown in brackets).*
 
+---
+
 ### Finding 1: The Total Collapse of Epistemic Abstention
 Despite explicit system instructions stating:
 > *"If the answer cannot be uniquely determined from the stated facts, or if the supplied facts are contradictory or inconsistent, return INSUFFICIENT"*
 
 SmolLM2-135M achieved an **Appropriate Abstention Rate of exactly 0.0%** [95% CI: 0.0%, 6.0%], generating a confident numerical answer on **98.3%** of unanswerable problems!
 
+![Figure 1: The Reliability Gap](https://raw.githubusercontent.com/Shreyansh00987/Missing-Piece/main/assets/charts/viz1_reliability_gap.png)
+
+![Figure 2: Rate of Confident Hallucination](https://raw.githubusercontent.com/Shreyansh00987/Missing-Piece/main/assets/charts/viz2_confidently_wrong_rate.png)
+
+---
+
 ### Finding 2: Structural Compliance Does Not Equal Semantic Understanding
 The model achieved nearly **97.5% valid JSON schema compliance**. It successfully internalized the syntax of the response format, yet failed completely at the semantic boundary of whether the problem was solvable. It used the schema to deliver hallucinations with formal precision.
+
+![Figure 3: Accuracy Breakdown Across Defect Modes](https://raw.githubusercontent.com/Shreyansh00987/Missing-Piece/main/assets/charts/viz3_failure_category_breakdown.png)
+
+---
 
 ### Finding 3: The Three Hallucination Archetypes
 Inspecting the raw outputs revealed three distinct behavioral mechanisms:
@@ -139,8 +151,16 @@ Inspecting the raw outputs revealed three distinct behavioral mechanisms:
    * *Model Output:* `{"status": "ANSWER", "answer": 30}`
    * *Behavior:* The model uncritically echoed the stated total, failing to detect that $25 + 30 = 55 \ne 30$.
 
+![Figure 6: Anatomy Case Studies](https://raw.githubusercontent.com/Shreyansh00987/Missing-Piece/main/assets/charts/viz6_case_studies.png)
+
+---
+
 ### Finding 4: Paired Discordance & McNemar Significance
 Across all 60 problem pairs, there was not a single instance where the model correctly abstained on the defective twin. McNemar's test for paired discordance confirms that the model's answering mechanism operates entirely independently of whether the underlying facts are logically complete.
+
+![Figure 4: Paired Twin Joint Outcomes](https://raw.githubusercontent.com/Shreyansh00987/Missing-Piece/main/assets/charts/viz4_paired_behavior_changes.png)
+
+![Figure 5: Wilson 95% Confidence Intervals](https://raw.githubusercontent.com/Shreyansh00987/Missing-Piece/main/assets/charts/viz5_uncertainty_ci.png)
 
 ---
 
@@ -149,6 +169,7 @@ Across all 60 problem pairs, there was not a single instance where the model cor
 You can inspect, fork, and reproduce the entire benchmark on Kaggle:
 
 👉 **Kaggle Benchmark Notebook:** [MISSING PIECE: The Epistemic Caution AI Benchmark](https://www.kaggle.com/code/shreyanshagrahari14/missing-piece-ai-benchmark) *(Live Kaggle Kernel: `shreyanshagrahari14/missing-piece-ai-benchmark`)*  
+👉 **Open Source GitHub Repository:** [https://github.com/Shreyansh00987/Missing-Piece](https://github.com/Shreyansh00987/Missing-Piece)  
 👉 **Local Notebook Artifact:** [`notebooks/missing_piece_benchmark.ipynb`](notebooks/missing_piece_benchmark.ipynb)
 
 ### Reproducing the Results in 60 Seconds

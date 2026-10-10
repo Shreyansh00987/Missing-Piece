@@ -185,8 +185,8 @@ missing-piece/
 
 ### 1. Installation
 ```bash
-git clone https://github.com/missing-piece/benchmark.git
-cd benchmark
+git clone https://github.com/Shreyansh00987/Missing-Piece.git
+cd Missing-Piece
 pip install -r requirements.txt
 ```
 

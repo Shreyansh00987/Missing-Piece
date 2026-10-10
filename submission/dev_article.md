@@ -5,7 +5,9 @@ tags: devchallenge, kagglechallenge, ai, machinelearning
 cover_image: https://raw.githubusercontent.com/missing-piece/benchmark/main/assets/cover/missing_piece_cover.jpg
 ---
 
-*The answer isn't always there. Does your AI know that?*
+*This is a submission for the [Kaggle Benchmarking Challenge](https://dev.to/challenges/kaggle-2026-09-23)*
+
+> *"The answer isn't always there. Does your AI know that?"*
 
 ---
 

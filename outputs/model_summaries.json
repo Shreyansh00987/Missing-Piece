@@ -1,0 +1,550 @@
+[
+  {
+    "model_id": "baseline_always_answer",
+    "total_examples": 120,
+    "total_answerable": 60,
+    "total_unanswerable": 60,
+    "answer_accuracy": 0.0167,
+    "answer_accuracy_ci": [
+      0.0029,
+      0.0886
+    ],
+    "answer_coverage": 1.0,
+    "appropriate_abstention_rate": 0.0,
+    "appropriate_abstention_rate_ci": [
+      0.0,
+      0.0602
+    ],
+    "confidently_wrong_rate": 1.0,
+    "confidently_wrong_rate_ci": [
+      0.9398,
+      1.0
+    ],
+    "abstention_precision": 0.0,
+    "overall_exact_match": 0.0083,
+    "overall_exact_match_ci": [
+      0.0015,
+      0.0457
+    ],
+    "balanced_accuracy": 0.0083,
+    "malformed_rate": 0.0,
+    "condition_breakdown": {
+      "intact": {
+        "total": 60,
+        "correct": 1,
+        "accuracy": 0.0167,
+        "ci_95": [
+          0.0029,
+          0.0886
+        ],
+        "confidently_wrong": 0,
+        "confidently_wrong_rate": 0.0
+      },
+      "missing_quantity": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ],
+        "confidently_wrong": 20,
+        "confidently_wrong_rate": 1.0
+      },
+      "missing_relationship": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ],
+        "confidently_wrong": 20,
+        "confidently_wrong_rate": 1.0
+      },
+      "contradiction": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ],
+        "confidently_wrong": 20,
+        "confidently_wrong_rate": 1.0
+      }
+    },
+    "category_breakdown": {
+      "basic_arithmetic": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ]
+      },
+      "inventory_tracking": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ]
+      },
+      "rate_and_time": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ]
+      },
+      "relational_reasoning": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ]
+      },
+      "resource_allocation": {
+        "total": 20,
+        "correct": 1,
+        "accuracy": 0.05,
+        "ci_95": [
+          0.0089,
+          0.2361
+        ]
+      },
+      "sequential_steps": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ]
+      }
+    },
+    "paired_count": 60,
+    "paired_both_correct": 0,
+    "paired_intact_correct_modified_wrong": 1,
+    "paired_intact_wrong_modified_correct": 0,
+    "paired_both_wrong": 59
+  },
+  {
+    "model_id": "baseline_always_abstain",
+    "total_examples": 120,
+    "total_answerable": 60,
+    "total_unanswerable": 60,
+    "answer_accuracy": 0.0,
+    "answer_accuracy_ci": [
+      0.0,
+      0.0602
+    ],
+    "answer_coverage": 0.0,
+    "appropriate_abstention_rate": 1.0,
+    "appropriate_abstention_rate_ci": [
+      0.9398,
+      1.0
+    ],
+    "confidently_wrong_rate": 0.0,
+    "confidently_wrong_rate_ci": [
+      0.0,
+      0.0602
+    ],
+    "abstention_precision": 0.5,
+    "overall_exact_match": 0.5,
+    "overall_exact_match_ci": [
+      0.4119,
+      0.5881
+    ],
+    "balanced_accuracy": 0.5,
+    "malformed_rate": 0.0,
+    "condition_breakdown": {
+      "intact": {
+        "total": 60,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.0602
+        ],
+        "confidently_wrong": 0,
+        "confidently_wrong_rate": 0.0
+      },
+      "missing_quantity": {
+        "total": 20,
+        "correct": 20,
+        "accuracy": 1.0,
+        "ci_95": [
+          0.8389,
+          1.0
+        ],
+        "confidently_wrong": 0,
+        "confidently_wrong_rate": 0.0
+      },
+      "missing_relationship": {
+        "total": 20,
+        "correct": 20,
+        "accuracy": 1.0,
+        "ci_95": [
+          0.8389,
+          1.0
+        ],
+        "confidently_wrong": 0,
+        "confidently_wrong_rate": 0.0
+      },
+      "contradiction": {
+        "total": 20,
+        "correct": 20,
+        "accuracy": 1.0,
+        "ci_95": [
+          0.8389,
+          1.0
+        ],
+        "confidently_wrong": 0,
+        "confidently_wrong_rate": 0.0
+      }
+    },
+    "category_breakdown": {
+      "basic_arithmetic": {
+        "total": 20,
+        "correct": 10,
+        "accuracy": 0.5,
+        "ci_95": [
+          0.2993,
+          0.7007
+        ]
+      },
+      "inventory_tracking": {
+        "total": 20,
+        "correct": 10,
+        "accuracy": 0.5,
+        "ci_95": [
+          0.2993,
+          0.7007
+        ]
+      },
+      "rate_and_time": {
+        "total": 20,
+        "correct": 10,
+        "accuracy": 0.5,
+        "ci_95": [
+          0.2993,
+          0.7007
+        ]
+      },
+      "relational_reasoning": {
+        "total": 20,
+        "correct": 10,
+        "accuracy": 0.5,
+        "ci_95": [
+          0.2993,
+          0.7007
+        ]
+      },
+      "resource_allocation": {
+        "total": 20,
+        "correct": 10,
+        "accuracy": 0.5,
+        "ci_95": [
+          0.2993,
+          0.7007
+        ]
+      },
+      "sequential_steps": {
+        "total": 20,
+        "correct": 10,
+        "accuracy": 0.5,
+        "ci_95": [
+          0.2993,
+          0.7007
+        ]
+      }
+    },
+    "paired_count": 60,
+    "paired_both_correct": 0,
+    "paired_intact_correct_modified_wrong": 0,
+    "paired_intact_wrong_modified_correct": 60,
+    "paired_both_wrong": 0
+  },
+  {
+    "model_id": "baseline_random_choice",
+    "total_examples": 120,
+    "total_answerable": 60,
+    "total_unanswerable": 60,
+    "answer_accuracy": 0.0167,
+    "answer_accuracy_ci": [
+      0.0029,
+      0.0886
+    ],
+    "answer_coverage": 0.45,
+    "appropriate_abstention_rate": 0.5333,
+    "appropriate_abstention_rate_ci": [
+      0.4089,
+      0.6537
+    ],
+    "confidently_wrong_rate": 0.4667,
+    "confidently_wrong_rate_ci": [
+      0.3463,
+      0.5911
+    ],
+    "abstention_precision": 0.4923,
+    "overall_exact_match": 0.275,
+    "overall_exact_match_ci": [
+      0.203,
+      0.3609
+    ],
+    "balanced_accuracy": 0.275,
+    "malformed_rate": 0.0,
+    "condition_breakdown": {
+      "intact": {
+        "total": 60,
+        "correct": 1,
+        "accuracy": 0.0167,
+        "ci_95": [
+          0.0029,
+          0.0886
+        ],
+        "confidently_wrong": 0,
+        "confidently_wrong_rate": 0.0
+      },
+      "missing_quantity": {
+        "total": 20,
+        "correct": 11,
+        "accuracy": 0.55,
+        "ci_95": [
+          0.3421,
+          0.7418
+        ],
+        "confidently_wrong": 9,
+        "confidently_wrong_rate": 0.45
+      },
+      "missing_relationship": {
+        "total": 20,
+        "correct": 10,
+        "accuracy": 0.5,
+        "ci_95": [
+          0.2993,
+          0.7007
+        ],
+        "confidently_wrong": 10,
+        "confidently_wrong_rate": 0.5
+      },
+      "contradiction": {
+        "total": 20,
+        "correct": 11,
+        "accuracy": 0.55,
+        "ci_95": [
+          0.3421,
+          0.7418
+        ],
+        "confidently_wrong": 9,
+        "confidently_wrong_rate": 0.45
+      }
+    },
+    "category_breakdown": {
+      "basic_arithmetic": {
+        "total": 20,
+        "correct": 7,
+        "accuracy": 0.35,
+        "ci_95": [
+          0.1812,
+          0.5671
+        ]
+      },
+      "inventory_tracking": {
+        "total": 20,
+        "correct": 4,
+        "accuracy": 0.2,
+        "ci_95": [
+          0.0807,
+          0.416
+        ]
+      },
+      "rate_and_time": {
+        "total": 20,
+        "correct": 3,
+        "accuracy": 0.15,
+        "ci_95": [
+          0.0524,
+          0.3604
+        ]
+      },
+      "relational_reasoning": {
+        "total": 20,
+        "correct": 4,
+        "accuracy": 0.2,
+        "ci_95": [
+          0.0807,
+          0.416
+        ]
+      },
+      "resource_allocation": {
+        "total": 20,
+        "correct": 7,
+        "accuracy": 0.35,
+        "ci_95": [
+          0.1812,
+          0.5671
+        ]
+      },
+      "sequential_steps": {
+        "total": 20,
+        "correct": 8,
+        "accuracy": 0.4,
+        "ci_95": [
+          0.2188,
+          0.6134
+        ]
+      }
+    },
+    "paired_count": 60,
+    "paired_both_correct": 0,
+    "paired_intact_correct_modified_wrong": 1,
+    "paired_intact_wrong_modified_correct": 32,
+    "paired_both_wrong": 27
+  },
+  {
+    "model_id": "SmolLM2-135M-Instruct",
+    "total_examples": 120,
+    "total_answerable": 60,
+    "total_unanswerable": 60,
+    "answer_accuracy": 0.0,
+    "answer_accuracy_ci": [
+      0.0,
+      0.0602
+    ],
+    "answer_coverage": 0.9667,
+    "appropriate_abstention_rate": 0.0,
+    "appropriate_abstention_rate_ci": [
+      0.0,
+      0.0602
+    ],
+    "confidently_wrong_rate": 0.9833,
+    "confidently_wrong_rate_ci": [
+      0.9114,
+      0.9971
+    ],
+    "abstention_precision": 0.0,
+    "overall_exact_match": 0.0,
+    "overall_exact_match_ci": [
+      0.0,
+      0.031
+    ],
+    "balanced_accuracy": 0.0,
+    "malformed_rate": 0.025,
+    "condition_breakdown": {
+      "intact": {
+        "total": 60,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.0602
+        ],
+        "confidently_wrong": 0,
+        "confidently_wrong_rate": 0.0
+      },
+      "missing_quantity": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ],
+        "confidently_wrong": 19,
+        "confidently_wrong_rate": 0.95
+      },
+      "missing_relationship": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ],
+        "confidently_wrong": 20,
+        "confidently_wrong_rate": 1.0
+      },
+      "contradiction": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ],
+        "confidently_wrong": 20,
+        "confidently_wrong_rate": 1.0
+      }
+    },
+    "category_breakdown": {
+      "basic_arithmetic": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ]
+      },
+      "inventory_tracking": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ]
+      },
+      "rate_and_time": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ]
+      },
+      "relational_reasoning": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ]
+      },
+      "resource_allocation": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ]
+      },
+      "sequential_steps": {
+        "total": 20,
+        "correct": 0,
+        "accuracy": 0.0,
+        "ci_95": [
+          0.0,
+          0.1611
+        ]
+      }
+    },
+    "paired_count": 60,
+    "paired_both_correct": 0,
+    "paired_intact_correct_modified_wrong": 0,
+    "paired_intact_wrong_modified_correct": 0,
+    "paired_both_wrong": 60
+  }
+]

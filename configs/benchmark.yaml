@@ -1,0 +1,48 @@
+benchmark:
+  name: "MISSING PIECE"
+  tagline: "The answer isn't always there. Does your AI know that?"
+  version: "1.0.0"
+  random_seed: 42
+
+dataset:
+  target_base_problems: 60
+  target_total_examples: 120
+  conditions:
+    - intact              # 60 examples: fully answerable, ground-truth integer
+    - missing_quantity    # 20 examples: missing numerical fact, underdetermined
+    - missing_relationship # 20 examples: missing relationship/linkage, underdetermined
+    - contradiction       # 20 examples: mutually inconsistent statements
+  domains:
+    - basic_arithmetic
+    - rate_and_time
+    - inventory_tracking
+    - resource_allocation
+    - sequential_steps
+    - relational_reasoning
+
+evaluation:
+  temperature: 0.0
+  max_tokens: 128
+  scoring_policy: "strict_deterministic"
+  confidence_interval_level: 0.95
+  methods:
+    - wilson_score_interval
+    - mcnemar_paired_test
+
+output_contract:
+  schema:
+    type: object
+    properties:
+      status:
+        type: string
+        enum: ["ANSWER", "INSUFFICIENT"]
+      answer:
+        type: ["string", "null"]
+    required: ["status"]
+
+paths:
+  data_dir: "data"
+  outputs_dir: "outputs"
+  cache_dir: "outputs/cache"
+  charts_dir: "assets/charts"
+  reports_dir: "reports"
